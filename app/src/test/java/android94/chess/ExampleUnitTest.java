@@ -1,4 +1,4 @@
-package android94.photoalbum;
+package android94.chess;
 
 import org.junit.Test;
 

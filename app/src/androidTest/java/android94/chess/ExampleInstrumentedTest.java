@@ -1,4 +1,4 @@
-package android94.photoalbum;
+package android94.chess;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("android94.photoalbum", appContext.getPackageName());
+        assertEquals("android94.chess", appContext.getPackageName());
     }
 }
