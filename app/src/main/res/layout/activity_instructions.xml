@@ -7,34 +7,73 @@
     tools:context="android94.chess.activity_instructions">
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/textView6"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="0dp"
+        android:text='The "DRAW" button will end the game in a draw.'
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:text="Pressing the back button during a game will end the game and not save any data."
-        tools:layout_editor_absoluteY="455dp"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="0dp"
+        android:text='The "RESIGN" button will declare the other player the winner.'
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="0dp"
+        android:text='The "UNDO" button will reverse the last move.'
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="320dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="0dp"
+        android:text='The "AI" button will randomly select a legal move for the current player.'
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="320dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
         android:text="Tap on a piece and then tap to the spot you want to legally move it to."
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/instruction3" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="180dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
         android:text="Record"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/instruction1" />
 
     <Button
@@ -42,10 +81,10 @@
         android:layout_width="180dp"
         android:layout_height="50dp"
         android:text="Play"
-        android:layout_marginTop="16dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="0dp" />
 
     <TextView
         android:id="@+id/instruction3"
@@ -54,36 +93,36 @@
         android:text='Pressing the "REPLAY" button will give you the option of viewing recorded games.'
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <Button
         android:id="@+id/button3"
         android:layout_width="180dp"
         android:layout_height="50dp"
-        android:layout_marginTop="16dp"
         android:text="Replay"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/instruction2" />
 
     <TextView
         android:id="@+id/instruction2"
         android:layout_width="320dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
         android:text='Pressing the "RECORD" button will start a new game of Chess with recording enabled.'
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
     <TextView
         android:id="@+id/instruction1"
         android:layout_width="320dp"
         android:layout_height="40dp"
-        android:layout_marginTop="16dp"
         android:text='Pressing the "PLAY" button will start a new game of Chess.'
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="0dp"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 </android.support.constraint.ConstraintLayout>
