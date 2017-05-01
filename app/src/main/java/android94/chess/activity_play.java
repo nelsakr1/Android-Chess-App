@@ -1,6 +1,7 @@
 package android94.chess;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -19,21 +20,26 @@ public class activity_play extends AppCompatActivity {
     public static int endCol;
     public static View startView;
     public static View endView;
-    public static int[][] validMoves;
 
     public static boolean gameOver;
     public static boolean stalemate;
     public static boolean whiteWins;
+    public static boolean draw;
 
     public static int[][] turnRecorder;
     public static int turnCounter;
+
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
+        context = this;
+
         gameOver = false;
+        draw = false;
         stalemate = false;
         whiteWins = false;
 
@@ -164,7 +170,7 @@ public class activity_play extends AppCompatActivity {
             }
 
             // move pieces on GUI board
-            changeDrawable();
+            changeDrawable(startRow, startCol, endRow, endCol);
 
             // record turn
             turnRecorder[0][turnCounter] = startRow;
@@ -184,6 +190,7 @@ public class activity_play extends AppCompatActivity {
             // check for end game conditions
             endGameConditions();
 
+            // change turn
             whiteTurn = !whiteTurn;
 
             if (whiteTurn) {
@@ -249,7 +256,7 @@ public class activity_play extends AppCompatActivity {
         }
 
         // check input move against list of valid movements
-        validMoves = Movement.getValidMoves(startRow, startCol, board);
+        int[][] validMoves = Movement.getValidMoves(startRow, startCol, board);
 
         for (int i = 0; i < validMoves[0].length; i++) {
 
@@ -263,22 +270,158 @@ public class activity_play extends AppCompatActivity {
     public static void endGameConditions () {
 
         if (gameOver) {
-            if (stalemate) {
-
-            }
-            else {
-                if (whiteWins) {
-
-                }
-                else {
-
-                }
-            }
+            Intent intent = new Intent(context, activity_gameover.class);
+            context.startActivity(intent);
         }
     }
 
     public void ai (View view) {
 
+        boolean moveSuccessful = false;
+
+        while (!moveSuccessful) {
+
+            int randomStartRow = (int) Math.floor(Math.random() * 7);
+            int randomStartCol = (int) Math.floor(Math.random() * 7);
+            int randomEndRow = (int) Math.floor(Math.random() * 7);
+            int randomEndCol = (int) Math.floor(Math.random() * 7);
+
+            // makes sure player is not moving an empty spot
+            if (board[randomStartRow][randomStartCol] == null) {
+                continue;
+            }
+
+            // makes sure player is picking a piece of their own color
+            if (whiteTurn) {
+                if (!board[randomStartRow][randomStartCol].color.equals("white")) {
+                    continue;
+                }
+            }
+            else {
+                if (!board[randomStartRow][randomStartCol].color.equals("black")) {
+                    continue;
+                }
+            }
+
+            // check input move against list of valid movements
+            int[][] validMoves = Movement.getValidMoves(randomStartRow, randomStartCol, board);
+
+            for (int i = 0; i < validMoves[0].length; i++) {
+
+                if (validMoves[0][i] == randomEndRow && validMoves[1][i] == randomEndCol) {
+
+                    moveSuccessful = true;
+
+                    // piece movement
+                    board = Movement.movePiece(randomStartRow, randomStartCol, randomEndRow, randomEndCol, board);
+
+                    // remove en passant tag
+                    for (int x = 0; x <= 7; x++) {
+                        for (int y = 0; y <= 7; y++) {
+                            if (board[x][y] instanceof Pawn) {
+                                board[x][y].canEnPassant = false;
+                            }
+                        }
+                    }
+
+                    // en passant setting
+                    if (board[randomEndRow][randomEndCol] instanceof Pawn) {
+                        if (!board[randomEndRow][randomEndCol].hasMoved) {
+                            board[randomEndRow][randomEndCol].canEnPassant = true;
+                        }
+                    }
+
+                    // change piece status to has moved before
+                    board[randomEndRow][randomEndCol].hasMoved = true;
+
+                    // promotion behavior
+                    if (board[randomEndRow][randomEndCol] instanceof Pawn) {
+
+                        // for white Queen
+                        if (randomEndRow == 7) {
+                            board[randomEndRow][randomEndCol] = new Queen("white", true);
+                        }
+
+                        // for black Queen
+                        if (randomEndRow == 0) {
+                            board[randomEndRow][randomEndCol] = new Queen("black", true);
+                        }
+                    }
+
+                    // check for checkmate/stalemate conditions
+                    if (whiteTurn) {
+                        if (Gameplay.playerInCheck(board, "black") && !Gameplay.hasValidMovesLeft(board, "black")) {
+                            gameOver = true;
+                            whiteWins = true;
+                        }
+                        if (!Gameplay.playerInCheck(board, "black") && !Gameplay.hasValidMovesLeft(board, "black")) {
+                            gameOver = true;
+                            stalemate = true;
+                        }
+                    }
+                    else {
+                        if (Gameplay.playerInCheck(board, "white") && !Gameplay.hasValidMovesLeft(board, "white")) {
+                            gameOver = true;
+                            whiteWins = false;
+                        }
+                        if (!Gameplay.playerInCheck(board, "white") && !Gameplay.hasValidMovesLeft(board, "white")) {
+                            gameOver = true;
+                            stalemate = true;
+                        }
+                    }
+
+                    // move pieces on GUI board
+                    changeDrawable(randomStartRow, randomStartCol, randomEndRow, randomEndCol);
+
+                    // record turn
+                    turnRecorder[0][turnCounter] = randomStartRow;
+                    turnRecorder[1][turnCounter] = randomStartCol;
+                    turnRecorder[2][turnCounter] = randomEndRow;
+                    turnRecorder[3][turnCounter] = randomEndCol;
+                    turnCounter++;
+
+                    // reset selected movement
+                    startRow = -1;
+                    startCol = -1;
+                    endRow = -1;
+                    endCol = -1;
+                    startView = null;
+                    endView = null;
+
+                    // check for end game conditions
+                    if (gameOver) {
+                        Intent intent = new Intent(context, activity_gameover.class);
+                        context.startActivity(intent);
+                    }
+
+                    // change turn
+                    whiteTurn = !whiteTurn;
+
+                    if (whiteTurn) {
+                        if (Gameplay.playerInCheck(board, "white")) {
+
+                            Context context = view.getContext();
+                            CharSequence text = "Check.";
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, text, duration);
+                            toast.show();
+                        }
+                    }
+                    else {
+                        if (Gameplay.playerInCheck(board, "black" )) {
+
+                            Context context = view.getContext();
+                            CharSequence text = "Check.";
+                            int duration = Toast.LENGTH_SHORT;
+
+                            Toast toast = Toast.makeText(context, text, duration);
+                            toast.show();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void undo (View view) {
@@ -287,29 +430,34 @@ public class activity_play extends AppCompatActivity {
 
     public void draw (View view) {
 
+        gameOver = true;
+        draw = true;
+        endGameConditions();
     }
 
     public void resign (View view) {
 
         if (whiteTurn) {
             gameOver = true;
-            whiteWins = true;
+            whiteWins = false;
         }
         else {
             gameOver = true;
-            whiteWins = false;
+            whiteWins = true;
         }
+
+        endGameConditions();
     }
 
-    public static void changeDrawable () {
+    public static void changeDrawable (int startingRow, int startingCol, int endingRow, int endingCol ) {
 
         ImageButton startPos = null;
         ImageButton endPos = null;
 
         // find starting position ImageButton to change
-        if (startCol == 0) {
+        if (startingCol == 0) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.a1);
@@ -345,9 +493,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 1) {
+        else if (startingCol == 1) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.b1);
@@ -383,9 +531,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 2) {
+        else if (startingCol == 2) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.c1);
@@ -421,9 +569,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 3) {
+        else if (startingCol == 3) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.d1);
@@ -459,9 +607,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 4) {
+        else if (startingCol == 4) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.e1);
@@ -497,9 +645,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 5) {
+        else if (startingCol == 5) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.f1);
@@ -535,9 +683,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 6) {
+        else if (startingCol == 6) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.g1);
@@ -573,9 +721,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (startCol == 7) {
+        else if (startingCol == 7) {
 
-            switch (startRow) {
+            switch (startingRow) {
 
                 case 0:
                     startPos = (ImageButton) startView.findViewById(R.id.h1);
@@ -613,9 +761,9 @@ public class activity_play extends AppCompatActivity {
         }
 
         // find ending position ImageButton to change
-        if (endCol == 0) {
+        if (endingCol == 0) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.a1);
@@ -651,9 +799,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 1) {
+        else if (endingCol == 1) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.b1);
@@ -689,9 +837,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 2) {
+        else if (endingCol == 2) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.c1);
@@ -727,9 +875,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 3) {
+        else if (endingCol == 3) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.d1);
@@ -765,9 +913,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 4) {
+        else if (endingCol == 4) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.e1);
@@ -803,9 +951,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 5) {
+        else if (endingCol == 5) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.f1);
@@ -841,9 +989,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 6) {
+        else if (endingCol == 6) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.g1);
@@ -879,9 +1027,9 @@ public class activity_play extends AppCompatActivity {
 
             }
         }
-        else if (endCol == 7) {
+        else if (endingCol == 7) {
 
-            switch (endRow) {
+            switch (endingRow) {
 
                 case 0:
                     endPos = (ImageButton) endView.findViewById(R.id.h1);
@@ -919,51 +1067,51 @@ public class activity_play extends AppCompatActivity {
         }
 
         // place pieces in the starting position
-        if (board[startRow][startCol] == null) {
+        if (board[startingRow][startingCol] == null) {
             startPos.setImageResource(android.R.color.transparent);
         }
-        else if (board[startRow][startCol] instanceof Pawn) {
-            if (board[startRow][startCol].color.equals("white")) {
+        else if (board[startingRow][startingCol] instanceof Pawn) {
+            if (board[startingRow][startingCol].color.equals("white")) {
                 startPos.setImageResource(R.drawable.wpawn);
             }
             else {
                 startPos.setImageResource(R.drawable.bpawn);
             }
         }
-        else if (board[startRow][startCol] instanceof Rook) {
-            if (board[startRow][startCol].color.equals("white")) {
+        else if (board[startingRow][startingCol] instanceof Rook) {
+            if (board[startingRow][startingCol].color.equals("white")) {
                 startPos.setImageResource(R.drawable.wrook);
             }
             else {
                 startPos.setImageResource(R.drawable.brook);
             }
         }
-        else if (board[startRow][startCol] instanceof Knight) {
-            if (board[startRow][startCol].color.equals("white")) {
+        else if (board[startingRow][startingCol] instanceof Knight) {
+            if (board[startingRow][startingCol].color.equals("white")) {
                 startPos.setImageResource(R.drawable.wknight);
             }
             else {
                 startPos.setImageResource(R.drawable.bknight);
             }
         }
-        else if (board[startRow][startCol] instanceof Bishop) {
-            if (board[startRow][startCol].color.equals("white")) {
+        else if (board[startingRow][startingCol] instanceof Bishop) {
+            if (board[startingRow][startingCol].color.equals("white")) {
                 startPos.setImageResource(R.drawable.wbishop);
             }
             else {
                 startPos.setImageResource(R.drawable.bbishop);
             }
         }
-        else if (board[startRow][startCol] instanceof Queen) {
-            if (board[startRow][startCol].color.equals("white")) {
+        else if (board[startingRow][startingCol] instanceof Queen) {
+            if (board[startingRow][startingCol].color.equals("white")) {
                 startPos.setImageResource(R.drawable.wqueen);
             }
             else {
                 startPos.setImageResource(R.drawable.bqueen);
             }
         }
-        else if (board[startRow][startCol] instanceof King) {
-            if (board[startRow][startCol].color.equals("white")) {
+        else if (board[startingRow][startingCol] instanceof King) {
+            if (board[startingRow][startingCol].color.equals("white")) {
                 startPos.setImageResource(R.drawable.wking);
             }
             else {
@@ -972,51 +1120,51 @@ public class activity_play extends AppCompatActivity {
         }
 
         // place pieces in the ending position
-        if (board[endRow][endCol] == null) {
+        if (board[endingRow][endingCol] == null) {
            endPos.setImageResource(android.R.color.transparent);
         }
-        else if (board[endRow][endCol] instanceof Pawn) {
-            if (board[endRow][endCol].color.equals("white")) {
+        else if (board[endingRow][endingCol] instanceof Pawn) {
+            if (board[endingRow][endingCol].color.equals("white")) {
                 endPos.setImageResource(R.drawable.wpawn);
             }
             else {
                 endPos.setImageResource(R.drawable.bpawn);
             }
         }
-        else if (board[endRow][endCol] instanceof Rook) {
-            if (board[endRow][endCol].color.equals("white")) {
+        else if (board[endingRow][endingCol] instanceof Rook) {
+            if (board[endingRow][endingCol].color.equals("white")) {
                 endPos.setImageResource(R.drawable.wrook);
             }
             else {
                 endPos.setImageResource(R.drawable.brook);
             }
         }
-        else if (board[endRow][endCol] instanceof Knight) {
-            if (board[endRow][endCol].color.equals("white")) {
+        else if (board[endingRow][endingCol] instanceof Knight) {
+            if (board[endingRow][endingCol].color.equals("white")) {
                 endPos.setImageResource(R.drawable.wknight);
             }
             else {
                 endPos.setImageResource(R.drawable.bknight);
             }
         }
-        else if (board[endRow][endCol] instanceof Bishop) {
-            if (board[endRow][endCol].color.equals("white")) {
+        else if (board[endingRow][endingCol] instanceof Bishop) {
+            if (board[endingRow][endingCol].color.equals("white")) {
                 endPos.setImageResource(R.drawable.wbishop);
             }
             else {
                 endPos.setImageResource(R.drawable.bbishop);
             }
         }
-        else if (board[endRow][endCol] instanceof Queen) {
-            if (board[endRow][endCol].color.equals("white")) {
+        else if (board[endingRow][endingCol] instanceof Queen) {
+            if (board[endingRow][endingCol].color.equals("white")) {
                 endPos.setImageResource(R.drawable.wqueen);
             }
             else {
                 endPos.setImageResource(R.drawable.bqueen);
             }
         }
-        else if (board[endRow][endCol] instanceof King) {
-            if (board[endRow][endCol].color.equals("white")) {
+        else if (board[endingRow][endingCol] instanceof King) {
+            if (board[endingRow][endingCol].color.equals("white")) {
                 endPos.setImageResource(R.drawable.wking);
             }
             else {
@@ -1281,8 +1429,6 @@ public class activity_play extends AppCompatActivity {
     public void h8 (View view) {
         resolveMove(7,7,view);
     }
-
-
 
 
 }
