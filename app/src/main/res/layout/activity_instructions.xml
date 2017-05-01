@@ -23,7 +23,7 @@
         android:text="Pressing the back button during a game will end the game and not save any data."
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
@@ -41,7 +41,7 @@
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:layout_marginTop="0dp"
-        android:text='The "UNDO" button will reverse the last move.'
+        android:text='The "UNDO" button will reverse the last turn and retake it'
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -63,18 +63,8 @@
         android:text="Tap on a piece and then tap to the spot you want to legally move it to."
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/instruction3" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="180dp"
-        android:layout_height="50dp"
-        android:text="Record"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/instruction1" />
 
     <Button
         android:id="@+id/button"
@@ -84,7 +74,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="0dp" />
+        android:layout_marginTop="8dp" />
 
     <TextView
         android:id="@+id/instruction3"
@@ -104,17 +94,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/instruction2" />
-
-    <TextView
-        android:id="@+id/instruction2"
-        android:layout_width="320dp"
-        android:layout_height="40dp"
-        android:text='Pressing the "RECORD" button will start a new game of Chess with recording enabled.'
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/instruction1" />
 
     <TextView
         android:id="@+id/instruction1"

@@ -19,11 +19,6 @@ public class activity_main extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void record (View view) {
-        Intent intent = new Intent(this, activity_play.class);
-        startActivity(intent);
-    }
-
     public void replay (View view) {
         Intent intent = new Intent(this, activity_replay.class);
         startActivity(intent);

@@ -1,9 +1,13 @@
 package android94.chess;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
+
+import java.util.Arrays;
 
 public class activity_play extends AppCompatActivity {
 
@@ -18,9 +22,11 @@ public class activity_play extends AppCompatActivity {
     public static int[][] validMoves;
 
     public static boolean gameOver;
-    public static boolean checkmate;
     public static boolean stalemate;
     public static boolean whiteWins;
+
+    public static int[][] turnRecorder;
+    public static int turnCounter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,6 @@ public class activity_play extends AppCompatActivity {
         setContentView(R.layout.activity_play);
 
         gameOver = false;
-        checkmate = false;
         stalemate = false;
         whiteWins = false;
 
@@ -36,6 +41,12 @@ public class activity_play extends AppCompatActivity {
         startCol = -1;
         endRow = -1;
         endCol = -1;
+
+        turnCounter = 0;
+        turnRecorder = new int[4][100];
+        for (int i = 0; i <= 3; i++) {
+            Arrays.fill(turnRecorder[i],-1);
+        }
 
         whiteTurn = true;
         board = Gameplay.createNewBoard();
@@ -116,7 +127,6 @@ public class activity_play extends AppCompatActivity {
             // change piece status to has moved before
             board[endRow][endCol].hasMoved = true;
 
-
             // promotion behavior
             if (board[endRow][endCol] instanceof Pawn) {
 
@@ -135,7 +145,6 @@ public class activity_play extends AppCompatActivity {
             if (whiteTurn) {
                 if (Gameplay.playerInCheck(board, "black") && !Gameplay.hasValidMovesLeft(board, "black")) {
                     gameOver = true;
-                    checkmate = true;
                     whiteWins = true;
                 }
                 if (!Gameplay.playerInCheck(board, "black") && !Gameplay.hasValidMovesLeft(board, "black")) {
@@ -146,7 +155,6 @@ public class activity_play extends AppCompatActivity {
             else {
                 if (Gameplay.playerInCheck(board, "white") && !Gameplay.hasValidMovesLeft(board, "white")) {
                     gameOver = true;
-                    checkmate = true;
                     whiteWins = false;
                 }
                 if (!Gameplay.playerInCheck(board, "white") && !Gameplay.hasValidMovesLeft(board, "white")) {
@@ -157,6 +165,13 @@ public class activity_play extends AppCompatActivity {
 
             // move pieces on GUI board
             changeDrawable();
+
+            // record turn
+            turnRecorder[0][turnCounter] = startRow;
+            turnRecorder[1][turnCounter] = startCol;
+            turnRecorder[2][turnCounter] = endRow;
+            turnRecorder[3][turnCounter] = endCol;
+            turnCounter++;
 
             // reset selected movement
             startRow = -1;
@@ -171,8 +186,39 @@ public class activity_play extends AppCompatActivity {
 
             whiteTurn = !whiteTurn;
 
+            if (whiteTurn) {
+                if (Gameplay.playerInCheck(board, "white")) {
+
+                    Context context = view.getContext();
+                    CharSequence text = "Check.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+            else {
+                if (Gameplay.playerInCheck(board, "black" )) {
+
+                    Context context = view.getContext();
+                    CharSequence text = "Check.";
+                    int duration = Toast.LENGTH_SHORT;
+
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                }
+            }
+
         }
         else {
+
+            Context context = view.getContext();
+            CharSequence text = "Invalid move.";
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
+
             startRow = -1;
             startCol = -1;
             endRow = -1;
@@ -216,6 +262,19 @@ public class activity_play extends AppCompatActivity {
 
     public static void endGameConditions () {
 
+        if (gameOver) {
+            if (stalemate) {
+
+            }
+            else {
+                if (whiteWins) {
+
+                }
+                else {
+
+                }
+            }
+        }
     }
 
     public void ai (View view) {
@@ -232,6 +291,14 @@ public class activity_play extends AppCompatActivity {
 
     public void resign (View view) {
 
+        if (whiteTurn) {
+            gameOver = true;
+            whiteWins = true;
+        }
+        else {
+            gameOver = true;
+            whiteWins = false;
+        }
     }
 
     public static void changeDrawable () {
