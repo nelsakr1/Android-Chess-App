@@ -8,10 +8,16 @@ import android.widget.TextView;
 
 public class activity_gameover extends AppCompatActivity {
 
+    public static int[][] turnRecorder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gameover);
+
+        // get turnRecorder from bundle
+        Bundle bundle = getIntent().getExtras();
+        turnRecorder = (int[][]) bundle.getSerializable("recordserial");
 
         // set end game condition text
         TextView t = (TextView) findViewById(R.id.gameover_text);
@@ -37,6 +43,11 @@ public class activity_gameover extends AppCompatActivity {
     public void record (View view) {
 
         Intent intent = new Intent(this, activity_record.class);
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("recordserial", turnRecorder);
+
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

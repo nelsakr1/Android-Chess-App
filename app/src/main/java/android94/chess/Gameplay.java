@@ -2,12 +2,13 @@ package android94.chess;
 
 import android.content.Context;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutput;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.List;
+
 
 public class Gameplay {
 
@@ -188,27 +189,77 @@ public class Gameplay {
         return false;
     }
 
-    public static void writeRecord (Context context, Object obj) {
-
-        File directory = new File(context.getFilesDir().getAbsolutePath()
-                + File.separator + "serialization");
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        String filename = "record.dat";
-        ObjectOutput out = null;
+    public static void writeRecord (List<int[][]> recordings, Context context) {
 
         try {
-            out = new ObjectOutputStream(new FileOutputStream(directory
-                    + File.separator + filename));
-            out.writeObject(obj);
+            FileOutputStream fileOut = context.openFileOutput("recordings", Context.MODE_PRIVATE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(recordings);
             out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            fileOut.close();
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static List<int[][]> readRecord (Context context) {
+
+        List<int[][]> recordings = null;
+
+        try {
+            FileInputStream fileIn = context.openFileInput("recordings");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            recordings = (List<int[][]>) in.readObject();
+            in.close();
+            fileIn.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException c) {
+            c.printStackTrace();
+        }
+
+        return recordings;
+
+    }
+
+    public static void writeName (List<String> recordings, Context context) {
+
+        try {
+            FileOutputStream fileOut = context.openFileOutput("names", Context.MODE_PRIVATE);
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            out.writeObject(recordings);
+            out.close();
+            fileOut.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static List<String> readName (Context context) {
+
+        List<String> names = null;
+
+        try {
+            FileInputStream fileIn = context.openFileInput("names");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            names = (List<String>) in.readObject();
+            in.close();
+            fileIn.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(ClassNotFoundException c) {
+            c.printStackTrace();
+        }
+
+        return names;
     }
 
 

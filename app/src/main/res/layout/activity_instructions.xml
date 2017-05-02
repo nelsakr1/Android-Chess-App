@@ -19,11 +19,11 @@
     <TextView
         android:id="@+id/textView2"
         android:layout_width="320dp"
-        android:layout_height="40dp"
-        android:text="Pressing the back button during a game will end the game and not save any data."
+        android:layout_height="50dp"
+        android:layout_marginTop="16dp"
+        android:text="Pressing the back button during a game will end the game and not save any data. Only up to 500 moves can be recorded."
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
     <TextView
@@ -41,7 +41,7 @@
         android:layout_width="320dp"
         android:layout_height="40dp"
         android:layout_marginTop="0dp"
-        android:text='The "UNDO" button will reverse the last turn and retake it'
+        android:text='The "UNDO" button will reverse the last turn and allow a player to retake it'
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
@@ -79,11 +79,11 @@
     <TextView
         android:id="@+id/instruction3"
         android:layout_width="320dp"
-        android:layout_height="40dp"
-        android:text='Pressing the "REPLAY" button will give you the option of viewing recorded games.'
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_height="50dp"
         android:layout_marginTop="0dp"
+        android:text='Pressing the "REPLAY" button will give you the option of viewing recorded games. By default, recordings are sorted by name.'
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <Button

@@ -59,7 +59,7 @@ public class activity_play extends AppCompatActivity {
         undoBoard = new Piece[8][8];
 
         turnCounter = 0;
-        turnRecorder = new int[4][269];
+        turnRecorder = new int[4][400];
         for (int i = 0; i <= 3; i++) {
             Arrays.fill(turnRecorder[i],-1);
         }
@@ -213,7 +213,7 @@ public class activity_play extends AppCompatActivity {
             }
 
             // move pieces on GUI board
-            changeDrawableAlt(board);
+            changeDrawableAlt(board, context);
             // changeDrawable(startRow, startCol, endRow, endCol);
 
             // record turn
@@ -237,36 +237,19 @@ public class activity_play extends AppCompatActivity {
 
             if (whiteTurn) {
                 if (Gameplay.playerInCheck(board, "white")) {
-
-                    Context context = view.getContext();
-                    CharSequence text = "Check.";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                    Toast.makeText(view.getContext(), "Check.", Toast.LENGTH_SHORT).show();
                 }
             }
             else {
                 if (Gameplay.playerInCheck(board, "black" )) {
-
-                    Context context = view.getContext();
-                    CharSequence text = "Check.";
-                    int duration = Toast.LENGTH_SHORT;
-
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                    Toast.makeText(view.getContext(), "Check.", Toast.LENGTH_SHORT).show();
                 }
             }
 
         }
         else {
             if (!aiMove) {
-                Context context = view.getContext();
-                CharSequence text = "Invalid move.";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+                Toast.makeText(view.getContext(), "Invalid Move.", Toast.LENGTH_SHORT).show();
 
                 startRow = -1;
                 startCol = -1;
@@ -358,6 +341,11 @@ public class activity_play extends AppCompatActivity {
 
         if (gameOver) {
             Intent intent = new Intent(context, activity_gameover.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("recordserial", turnRecorder);
+
+            intent.putExtras(bundle);
             context.startActivity(intent);
         }
     }
@@ -432,7 +420,7 @@ public class activity_play extends AppCompatActivity {
                     }
                 }
             }
-            changeDrawableAlt(board);
+            changeDrawableAlt(board, context);
             undoPossible = false;
             whiteTurn = !whiteTurn;
 
@@ -443,12 +431,7 @@ public class activity_play extends AppCompatActivity {
             turnRecorder[3][turnCounter] = -1;
         }
         else {
-            Context context = view.getContext();
-            CharSequence text = "Unable to undo move.";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+            Toast.makeText(view.getContext(), "Unable to undo move.", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -508,7 +491,7 @@ public class activity_play extends AppCompatActivity {
                 .show();
     }
 
-    public static void changeDrawableAlt (Piece[][] changeBoard) {
+    public static void changeDrawableAlt (Piece[][] changeBoard, Context context) {
 
         ImageButton current = null;
 

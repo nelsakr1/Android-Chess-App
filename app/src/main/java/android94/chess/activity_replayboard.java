@@ -10,17 +10,23 @@ import android.widget.Toast;
 public class activity_replayboard extends AppCompatActivity {
 
     public static Piece[][] replayBoard;
-    public static int[][] turnRecorder;
+    public static int[][] gameBeingPlayed;
     public static int turnCounter;
     public static boolean gameOver;
+    public static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_replayboard);
 
-        //TODO set turnRecorder
+        context = this;
 
+        // get turnRecorder from bundle
+        Bundle bundle = getIntent().getExtras();
+        gameBeingPlayed = (int[][]) bundle.getSerializable("recordserial");
+
+        turnCounter = 0;
         gameOver = false;
         replayBoard = Gameplay.createNewBoard();
 
@@ -64,46 +70,29 @@ public class activity_replayboard extends AppCompatActivity {
     public void nextButton (View view) {
 
         if (!gameOver) {
-            if (turnRecorder[0][turnCounter] == -1) {
+            if (gameBeingPlayed[0][turnCounter] == -1) {
                 gameOver = true;
             }
-            else if (turnRecorder[0][turnCounter] == -2) {
-                Context context = view.getContext();
-                CharSequence text = "Player White Wins.";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+            else if (gameBeingPlayed[0][turnCounter] == -2) {
+                Toast.makeText(view.getContext(), "Player White Wins.", Toast.LENGTH_SHORT).show();
+                gameOver = true;
             }
-            else if (turnRecorder[0][turnCounter] == -3) {
-                Context context = view.getContext();
-                CharSequence text = "Player Black Wins.";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+            else if (gameBeingPlayed[0][turnCounter] == -3) {
+                Toast.makeText(view.getContext(), "Player Black Wins.", Toast.LENGTH_SHORT).show();
+                gameOver = true;
             }
-            else if (turnRecorder[0][turnCounter] == -4) {
-                Context context = view.getContext();
-                CharSequence text = "Draw.";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
+            else if (gameBeingPlayed[0][turnCounter] == -4) {
+                Toast.makeText(view.getContext(), "Draw.", Toast.LENGTH_SHORT).show();
+                gameOver = true;
             }
             else {
-                Movement.movePiece(turnRecorder[0][turnCounter], turnRecorder[1][turnCounter], turnRecorder[2][turnCounter], turnRecorder[3][turnCounter], replayBoard);
-                activity_play.changeDrawableAlt(replayBoard);
+                Movement.movePiece(gameBeingPlayed[0][turnCounter], gameBeingPlayed[1][turnCounter], gameBeingPlayed[2][turnCounter], gameBeingPlayed[3][turnCounter], replayBoard);
+                activity_play.changeDrawableAlt(replayBoard, context);
                 turnCounter++;
             }
         }
         else {
-            Context context = view.getContext();
-            CharSequence text = "Game is over.";
-            int duration = Toast.LENGTH_SHORT;
-
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+            Toast.makeText(view.getContext(), "Game Is Over.", Toast.LENGTH_SHORT).show();
         }
 
     }
