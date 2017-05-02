@@ -27,8 +27,6 @@ public class Movement {
                 if (board[startRow][startColumn + 1] instanceof Pawn) {
                     if (board[startRow][startColumn + 1].canEnPassant && board[startRow][startColumn + 1].color != board[startRow][startColumn].color) {
                         board[startRow][startColumn + 1] = null;
-                        board[endRow][endColumn] = new Pawn(board[startRow][startColumn], true);
-                        return board;
                     }
                 }
             }
@@ -38,8 +36,6 @@ public class Movement {
                 if (board[startRow][startColumn - 1] instanceof Pawn) {
                     if (board[startRow][startColumn - 1].canEnPassant && board[startRow][startColumn - 1].color != board[startRow][startColumn].color) {
                         board[startRow][startColumn - 1] = null;
-                        board[endRow][endColumn] = new Pawn(board[startRow][startColumn], true);
-                        return board;
                     }
                 }
             }
@@ -49,8 +45,6 @@ public class Movement {
                 if (board[startRow][startColumn + 1] instanceof Pawn) {
                     if (board[startRow][startColumn + 1].canEnPassant && board[startRow][startColumn + 1].color != board[startRow][startColumn].color) {
                         board[startRow][startColumn + 1] = null;
-                        board[endRow][endColumn] = new Pawn(board[startRow][startColumn], true);
-                        return board;
                     }
                 }
             }
@@ -60,8 +54,6 @@ public class Movement {
                 if (board[startRow][startColumn - 1] instanceof Pawn) {
                     if (board[startRow][startColumn - 1].canEnPassant && board[startRow][startColumn - 1].color != board[startRow][startColumn].color) {
                         board[startRow][startColumn - 1] = null;
-                        board[endRow][endColumn] = new Pawn(board[startRow][startColumn], true);
-                        return board;
                     }
                 }
             }
@@ -69,39 +61,37 @@ public class Movement {
 
         // castling movement
         if (board[startRow][startColumn] instanceof King) {
-            if (!board[startRow][startColumn].hasMoved) {
-                if (endRow == 0) {
-                    if (endColumn == 2) {
-                        board[0][2] = new King ("white", true);
-                        board[0][3] = new Rook("white", true);
-                        board[startRow][startColumn] = null;
-                        board[0][0] = null;
-                        return board;
-                    }
-                    else if (endColumn == 6) {
-                        board[0][6] = new King ("white", true);
-                        board[0][5] = new Rook("white", true);
-                        board[startRow][startColumn] = null;
-                        board[0][7] = null;
-                        return board;
-                    }
+            if (endRow == 0) {
+                if (endColumn == 2) {
+                    board[0][2] = new King ("white", true);
+                    board[0][3] = new Rook("white", true);
+                    board[startRow][startColumn] = null;
+                    board[0][0] = null;
+                    return board;
                 }
+                else if (endColumn == 6) {
+                    board[0][6] = new King ("white", true);
+                    board[0][5] = new Rook("white", true);
+                    board[startRow][startColumn] = null;
+                    board[0][7] = null;
+                    return board;
+                }
+            }
 
-                if (endRow == 7) {
-                    if (endColumn == 2) {
-                        board[7][2] = new King ("black", true);
-                        board[7][3] = new Rook("black", true);
-                        board[startRow][startColumn] = null;
-                        board[7][0] = null;
-                        return board;
-                    }
-                    else if (endColumn == 6) {
-                        board[7][6] = new King ("black", true);
-                        board[7][5] = new Rook("black", true);
-                        board[startRow][startColumn] = null;
-                        board[7][7] = null;
-                        return board;
-                    }
+            if (endRow == 7) {
+                if (endColumn == 2) {
+                    board[7][2] = new King ("black", true);
+                    board[7][3] = new Rook("black", true);
+                    board[startRow][startColumn] = null;
+                    board[7][0] = null;
+                    return board;
+                }
+                else if (endColumn == 6) {
+                    board[7][6] = new King ("black", true);
+                    board[7][5] = new Rook("black", true);
+                    board[startRow][startColumn] = null;
+                    board[7][7] = null;
+                    return board;
                 }
             }
         }
@@ -226,7 +216,7 @@ public class Movement {
             return filterMoves(getPawnMoves(row, column, board), board);
         }
         else if (board[row][column] instanceof King) {
-            return getKingMoves(row, column, board);
+            return filterMoves(getKingMoves(row, column, board),board);
         }
         else if (board[row][column] instanceof Knight) {
             return filterMoves(getKnightMoves(row, column, board), board);
@@ -428,16 +418,6 @@ public class Movement {
                 validMoves[1][i] = -1;
                 continue;
             }
-
-//            // skips over empty positions on the board
-//            else if (board[validMoves[0][i]][validMoves[1][i]] != null) {
-//
-//                // removes capturing of own color pieces
-//                if (board[validMoves[0][i]][validMoves[1][i]].color.equals(board[row][column].color)) {
-//                    validMoves[0][i] = -1;
-//                    validMoves[1][i] = -1;
-//                }
-//            }
         }
 
         // castling movement

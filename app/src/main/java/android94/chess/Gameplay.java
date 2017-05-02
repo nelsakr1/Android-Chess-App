@@ -86,7 +86,9 @@ public class Gameplay {
 
                     // see if there is any instance of a piece being able to capture a king
                     if (board[allMoves[0][k]][allMoves[1][k]] instanceof King) {
-                        return true;
+                        if (board[allMoves[0][k]][allMoves[1][k]].color.equals(playerColor)) {
+                            return true;
+                        }
                     }
                 }
             }
