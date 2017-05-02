@@ -34,10 +34,10 @@ public class activity_record extends AppCompatActivity {
         List<String> recordName = null;
 
         // read/create game recording data
-        File file1 = new File(context.getFilesDir(), "record");
+        File file1 = new File(context.getFilesDir(), "record.dat");
         if (file1.exists()) {
             try {
-                FileInputStream fis = context.openFileInput("record");
+                FileInputStream fis = context.openFileInput("record.dat");
                 ObjectInputStream is = new ObjectInputStream(fis);
                 record = (List<int[][]>) is.readObject();
                 is.close();
@@ -61,7 +61,7 @@ public class activity_record extends AppCompatActivity {
 
         // update the data files with new recording
         try {
-            FileOutputStream fos = context.openFileOutput("record", context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput("record.dat", context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(record);
             os.close();
@@ -73,10 +73,10 @@ public class activity_record extends AppCompatActivity {
 
 
         // read/create game recording name data
-        File file2 = new File(context.getFilesDir(), "recordName");
+        File file2 = new File(context.getFilesDir(), "recordName.dat");
         if (file2.exists()) {
             try {
-                FileInputStream fis = context.openFileInput("recordName");
+                FileInputStream fis = context.openFileInput("recordName.dat");
                 ObjectInputStream is = new ObjectInputStream(fis);
                 recordName = (List<String>) is.readObject();
                 is.close();
@@ -101,7 +101,7 @@ public class activity_record extends AppCompatActivity {
 
         // update the data files with new recording
         try {
-            FileOutputStream fos = context.openFileOutput("recordName", context.MODE_PRIVATE);
+            FileOutputStream fos = context.openFileOutput("recordName.dat", context.MODE_PRIVATE);
             ObjectOutputStream os = new ObjectOutputStream(fos);
             os.writeObject(recordName);
             os.close();

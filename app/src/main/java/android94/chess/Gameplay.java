@@ -1,5 +1,14 @@
 package android94.chess;
 
+import android.content.Context;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+
 public class Gameplay {
 
     /**
@@ -177,5 +186,51 @@ public class Gameplay {
             }
         }
         return false;
+    }
+
+    public static void writeRecord (Context context, Object obj) {
+
+        File directory = new File(context.getFilesDir().getAbsolutePath()
+                + File.separator + "serialization");
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        String filename = "record.dat";
+        ObjectOutput out = null;
+
+        try {
+            out = new ObjectOutputStream(new FileOutputStream(directory
+                    + File.separator + filename));
+            out.writeObject(obj);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void readRecord (Context context, Object obj) {
+
+        File directory = new File(context.getFilesDir().getAbsolutePath()
+                + File.separator + "serialization");
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        String filename = "record.dat";
+        ObjectOutput out = null;
+
+        try {
+            out = new ObjectOutputStream(new FileOutputStream(directory
+                    + File.separator + filename));
+            out.writeObject(obj);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
