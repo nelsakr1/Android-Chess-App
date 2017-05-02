@@ -43,7 +43,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity_main" />
         </activity>
-        <activity android:name=".activity_gameover"
+        <activity
+            android:name=".activity_gameover"
             android:parentActivityName=".activity_main">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -51,7 +52,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activity_main" />
         </activity>
-        <activity android:name=".activity_record"></activity>
+        <activity android:name=".activity_record" />
+        <activity android:name=".activity_replayboard"
+            android:parentActivityName=".activity_replay">
+
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity_replay" />
+        </activity>
     </application>
 
 </manifest>

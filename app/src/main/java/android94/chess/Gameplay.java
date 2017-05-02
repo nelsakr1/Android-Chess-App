@@ -211,26 +211,5 @@ public class Gameplay {
         }
     }
 
-    public static void readRecord (Context context, Object obj) {
 
-        File directory = new File(context.getFilesDir().getAbsolutePath()
-                + File.separator + "serialization");
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        String filename = "record.dat";
-        ObjectOutput out = null;
-
-        try {
-            out = new ObjectOutputStream(new FileOutputStream(directory
-                    + File.separator + filename));
-            out.writeObject(obj);
-            out.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

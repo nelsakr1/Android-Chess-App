@@ -26,6 +26,8 @@ public class activity_record extends AppCompatActivity {
         setContentView(R.layout.activity_record);
 
         context = this;
+
+        //TODO set turnRecorder
     }
 
     public void createRecording (View view) {

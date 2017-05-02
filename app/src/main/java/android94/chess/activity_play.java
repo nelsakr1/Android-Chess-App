@@ -191,25 +191,29 @@ public class activity_play extends AppCompatActivity {
                 if (Gameplay.playerInCheck(board, "black") && !Gameplay.hasValidMovesLeft(board, "black")) {
                     gameOver = true;
                     whiteWins = true;
+                    turnRecorder[0][turnCounter] = -2;
                 }
                 if (!Gameplay.playerInCheck(board, "black") && !Gameplay.hasValidMovesLeft(board, "black")) {
                     gameOver = true;
                     stalemate = true;
+                    turnRecorder[0][turnCounter] = -4;
                 }
             }
             else {
                 if (Gameplay.playerInCheck(board, "white") && !Gameplay.hasValidMovesLeft(board, "white")) {
                     gameOver = true;
                     whiteWins = false;
+                    turnRecorder[0][turnCounter] = -3;
                 }
                 if (!Gameplay.playerInCheck(board, "white") && !Gameplay.hasValidMovesLeft(board, "white")) {
                     gameOver = true;
                     stalemate = true;
+                    turnRecorder[0][turnCounter] = -4;
                 }
             }
 
             // move pieces on GUI board
-            changeDrawableAlt();
+            changeDrawableAlt(board);
             // changeDrawable(startRow, startCol, endRow, endCol);
 
             // record turn
@@ -428,7 +432,7 @@ public class activity_play extends AppCompatActivity {
                     }
                 }
             }
-            changeDrawableAlt();
+            changeDrawableAlt(board);
             undoPossible = false;
             whiteTurn = !whiteTurn;
 
@@ -460,6 +464,7 @@ public class activity_play extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                         gameOver = true;
                         stalemate = true;
+                        turnRecorder[0][turnCounter] = -4;
                         endGameConditions();
                     }
                 })
@@ -484,10 +489,12 @@ public class activity_play extends AppCompatActivity {
                         if (whiteTurn) {
                             gameOver = true;
                             whiteWins = false;
+                            turnRecorder[0][turnCounter] = -3;
                         }
                         else {
                             gameOver = true;
                             whiteWins = true;
+                            turnRecorder[0][turnCounter] = -2;
                         }
                         endGameConditions();
                     }
@@ -501,7 +508,7 @@ public class activity_play extends AppCompatActivity {
                 .show();
     }
 
-    public static void changeDrawableAlt () {
+    public static void changeDrawableAlt (Piece[][] changeBoard) {
 
         ImageButton current = null;
 
@@ -750,51 +757,51 @@ public class activity_play extends AppCompatActivity {
                 }
 
 
-                if (board[i][j] == null) {
+                if (changeBoard[i][j] == null) {
                     current.setImageResource(android.R.color.transparent);
                 }
-                else if (board[i][j] instanceof Pawn) {
-                    if (board[i][j].color.equals("white")) {
+                else if (changeBoard[i][j] instanceof Pawn) {
+                    if (changeBoard[i][j].color.equals("white")) {
                         current.setImageResource(R.drawable.wpawn);
                     }
                     else {
                         current.setImageResource(R.drawable.bpawn);
                     }
                 }
-                else if (board[i][j] instanceof Rook) {
-                    if (board[i][j].color.equals("white")) {
+                else if (changeBoard[i][j] instanceof Rook) {
+                    if (changeBoard[i][j].color.equals("white")) {
                         current.setImageResource(R.drawable.wrook);
                     }
                     else {
                         current.setImageResource(R.drawable.brook);
                     }
                 }
-                else if (board[i][j] instanceof Knight) {
-                    if (board[i][j].color.equals("white")) {
+                else if (changeBoard[i][j] instanceof Knight) {
+                    if (changeBoard[i][j].color.equals("white")) {
                         current.setImageResource(R.drawable.wknight);
                     }
                     else {
                         current.setImageResource(R.drawable.bknight);
                     }
                 }
-                else if (board[i][j] instanceof Bishop) {
-                    if (board[i][j].color.equals("white")) {
+                else if (changeBoard[i][j] instanceof Bishop) {
+                    if (changeBoard[i][j].color.equals("white")) {
                         current.setImageResource(R.drawable.wbishop);
                     }
                     else {
                         current.setImageResource(R.drawable.bbishop);
                     }
                 }
-                else if (board[i][j] instanceof Queen) {
-                    if (board[i][j].color.equals("white")) {
+                else if (changeBoard[i][j] instanceof Queen) {
+                    if (changeBoard[i][j].color.equals("white")) {
                         current.setImageResource(R.drawable.wqueen);
                     }
                     else {
                         current.setImageResource(R.drawable.bqueen);
                     }
                 }
-                else if (board[i][j] instanceof King) {
-                    if (board[i][j].color.equals("white")) {
+                else if (changeBoard[i][j] instanceof King) {
+                    if (changeBoard[i][j].color.equals("white")) {
                         current.setImageResource(R.drawable.wking);
                     }
                     else {
